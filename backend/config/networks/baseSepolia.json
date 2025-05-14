@@ -1,0 +1,11 @@
+{
+  "name": "baseSepolia",
+  "chainId": 84532,
+  "contracts": {
+    "MockUSDC": "0xD32718dC5a898e3281984C31a11d7719Ea93552b",
+    "EggCoin": "0x695d01426D6B211012F8A2C189dF462bC87957e4",
+    "LiquidityPool": "0x481a00fCC61865573F537661Cf4D114226755c8E",
+    "LoanManager": "0x478f48EdC0E5cf1F2a67BAe6f1de302a6A8156E8",
+    "YieldPool": "0x003aFaB41F1F129eAB74b5f6871EE826E4d7240E"
+  }
+}

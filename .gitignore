@@ -1,0 +1,21 @@
+# Frontend
+eggcoin-dapp/frontend/node_modules
+eggcoin-dapp/frontend/.next
+eggcoin-dapp/frontend/out
+eggcoin-dapp/frontend/build
+eggcoin-dapp/frontend/.env*
+eggcoin-dapp/frontend/.vercel
+eggcoin-dapp/frontend/*.tsbuildinfo
+
+# Backend
+eggcoin-dapp/backend/node_modules
+eggcoin-dapp/backend/artifacts
+eggcoin-dapp/backend/cache
+eggcoin-dapp/backend/typechain-types
+eggcoin-dapp/backend/.env
+eggcoin-dapp/backend/*.log
+
+# General
+.DS_Store
+*.pem
+*.log

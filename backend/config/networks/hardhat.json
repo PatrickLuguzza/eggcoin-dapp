@@ -1,0 +1,11 @@
+{
+  "name": "hardhat",
+  "chainId": 31337,
+  "contracts": {
+    "MockUSDC": "",
+    "EggCoin": "",
+    "LiquidityPool": "",
+    "LoanManager": "",
+    "YieldPool": ""
+  }
+}

@@ -1,0 +1,185 @@
+/* Main Page Styles */
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, var(--secondary-light), white);
+}
+
+.main-header {
+  background: var(--primary-dark);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  padding: 2rem 0;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.header-left {
+  flex: 1;
+}
+
+.wallet-button-container {
+  margin-left: auto;
+}
+
+.connect-wallet-btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.connect-wallet-btn:hover {
+  background-color: #3e8e41;
+  transform: translateY(-1px);
+}
+
+.connect-wallet-btn:active {
+  transform: translateY(0);
+}
+
+.main-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.main-header p {
+  color: rgba(255,255,255,0.9);
+  font-size: 1.125rem;
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.dashboard-selector h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--secondary-dark);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-icon {
+  background: rgba(139, 195, 74, 0.1);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.card-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.dashboard-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--secondary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-card p {
+  color: var(--secondary);
+  line-height: 1.5;
+}
+
+/* Card Variants */
+.farmer-card {
+  border-left: 8px solid var(--primary);
+}
+
+.farmer-card .card-icon {
+  background: rgba(139, 195, 74, 0.1);
+}
+
+.farmer-card .card-icon svg {
+  color: var(--primary);
+}
+
+.investor-card {
+  border-left: 8px solid var(--info);
+}
+
+.investor-card .card-icon {
+  background: rgba(33, 150, 243, 0.1);
+}
+
+.investor-card .card-icon svg {
+  color: var(--info);
+}
+
+.vendor-card {
+  border-left: 8px solid var(--secondary);
+}
+
+.vendor-card .card-icon {
+  background: rgba(156, 39, 176, 0.1);
+}
+
+.vendor-card .card-icon svg {
+  color: var(--secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .main-header h1 {
+    font-size: 2rem;
+  }
+
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .wallet-button-container {
+    margin: 1rem 0 0;
+  }
+}
