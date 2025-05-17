@@ -1,87 +1,69 @@
+import axios from 'axios';
 import { ethers } from 'ethers';
-import { CONTRACTS } from '../config/wallet';
-import { useWallet } from './ethersWallet';
+import { JsonRpcProvider } from 'ethers/providers';
 
-// Path to backend artifacts
-const ARTIFACTS_PATH = '../../backend/artifacts/contracts';
-
-export interface ContractConfig {
-  address: string;
-  abi: any[];
+interface ContractAddresses {
+  MockUSDC: string;
+  EggCoin: string;
+  LiquidityPool: string;
+  LoanManager: string;
+  YieldPool: string;
 }
 
-async function loadArtifact(contractName: string) {
+const CONTRACT_ADDRESSES: ContractAddresses = {
+  MockUSDC: process.env.NEXT_PUBLIC_MOCKUSDC_ADDRESS || '0x76CBb757d25ee75876B894079463D5973e9d593B',
+  EggCoin: process.env.NEXT_PUBLIC_EGGCOIN_ADDRESS || '0xCd22e18D0605a6843Fd74F11D02b7622D5Dfe251',
+  LiquidityPool: process.env.NEXT_PUBLIC_LIQUIDITYPOOL_ADDRESS || '0x1A7879934f5106Cef3FDc0eF432A565911f10378',
+  LoanManager: process.env.NEXT_PUBLIC_LOANMANAGER_ADDRESS || '0x653bb152d1B3fF6641f5f50F021686CCf1D8F80e',
+  YieldPool: process.env.NEXT_PUBLIC_YIELDPOOL_ADDRESS || '0xB0b0768B68189aF86d93C150881002a21b35dB20'
+};
+
+export async function getContractAbi(contractAddress: string): Promise<ethers.InterfaceAbi> {
   try {
-    // Construct path to artifact JSON
-    const artifactPath = `${ARTIFACTS_PATH}/${contractName}.sol/${contractName}.json`;
-    const response = await fetch(artifactPath);
-    if (!response.ok) throw new Error('Failed to fetch artifact');
-    return await response.json();
+    if (!process.env.NEXT_PUBLIC_BASESCAN_API_KEY) {
+      throw new Error('BaseScan API key not configured');
+    }
+
+    const url = `https://api.basescan.org/api?module=contract&action=getabi&address=${contractAddress}&apikey=${process.env.NEXT_PUBLIC_BASESCAN_API_KEY}`;
+    const response = await axios.get<{
+      status: string;
+      message: string;
+      result: string;
+    }>(url);
+    
+    if (response.data.status !== '1') {
+      throw new Error(`BaseScan API error: ${response.data.message}`);
+    }
+
+    return JSON.parse(response.data.result) as ethers.InterfaceAbi;
   } catch (error) {
-    console.error(`Error loading ${contractName} artifact:`, error);
-    throw error;
-  }
-}
-
-export async function loadContract(
-  contractName: keyof typeof CONTRACTS,
-  provider: ethers.BrowserProvider | null,
-  signer: ethers.JsonRpcSigner | null
-): Promise<ContractConfig> {
-  if (!provider || !signer) {
-    throw new Error('Wallet not connected');
-  }
-
-  const network = await provider.getNetwork();
-  const chainId = Number(network.chainId);
-
-  const contractConfig = CONTRACTS[contractName][chainId];
-  if (!contractConfig) {
-    throw new Error(`No config found for ${contractName} on chain ${chainId}`);
-  }
-
-  try {
-    // Load artifact and extract ABI
-    const artifact = await loadArtifact(contractName);
-    const abi = artifact.abi;
-
-    return {
-      address: contractConfig.address,
-      abi
-    };
-  } catch (error) {
-    console.error(`Error loading contract ${contractName}:`, error);
+    console.error('Error fetching ABI:', error);
     throw error;
   }
 }
 
 export async function getContractInstance(
-  contractName: keyof typeof CONTRACTS,
-  signer: ethers.JsonRpcSigner | null
-) {
-  if (!signer) throw new Error('Wallet not connected');
-
-  const { address, abi } = await loadContract(
-    contractName, 
-    signer.provider as ethers.BrowserProvider,
-    signer
-  );
-  
-  // Create ethers Contract instance
-  const contract = new ethers.Contract(address, abi, signer);
-  
-  console.log(`Created contract instance for ${contractName} at ${address}`);
-  return contract;
+  contractAddress: string,
+  signerOrProvider?: ethers.Signer | ethers.Provider
+): Promise<ethers.Contract> {
+  try {
+    const abi = await getContractAbi(contractAddress);
+    const provider = signerOrProvider || new JsonRpcProvider(process.env.NEXT_PUBLIC_BASE_RPC_URL);
+    return new ethers.Contract(contractAddress, abi, provider);
+  } catch (error) {
+    console.error('Error creating contract instance:', error);
+    throw error;
+  }
 }
 
-// Utility function to get contract instance by name and address
-export async function getCustomContractInstance(
-  contractName: string,
-  contractAddress: string,
-  signer: ethers.JsonRpcSigner | null
-) {
-  if (!signer) throw new Error('Wallet not connected');
+export async function getAllContracts(signer?: ethers.Signer): Promise<Record<keyof ContractAddresses, ethers.Contract>> {
+  const contracts = {
+    MockUSDC: await getContractInstance(CONTRACT_ADDRESSES.MockUSDC, signer),
+    EggCoin: await getContractInstance(CONTRACT_ADDRESSES.EggCoin, signer),
+    LiquidityPool: await getContractInstance(CONTRACT_ADDRESSES.LiquidityPool, signer),
+    LoanManager: await getContractInstance(CONTRACT_ADDRESSES.LoanManager, signer),
+    YieldPool: await getContractInstance(CONTRACT_ADDRESSES.YieldPool, signer)
+  };
 
-  const artifact = await loadArtifact(contractName);
-  return new ethers.Contract(contractAddress, artifact.abi, signer);
+  return contracts;
 }

@@ -5,7 +5,7 @@ module.exports = {
   solidity: "0.8.20",
   networks: {
     hardhat: {
-      chainId: 31337, // Changed to 31337 as requested
+      chainId: 31337,
     },
     localhost: {
       url: "http://127.0.0.1:8545",
@@ -17,10 +17,18 @@ module.exports = {
         mnemonic: process.env.MNEMONIC,
       },
     },
+    baseMainnet: {
+      url: process.env.BASE_MAINNET_RPC_URL,
+      chainId: 8453,
+      accounts: {
+        mnemonic: process.env.MNEMONIC,
+      },
+    }
   },
   etherscan: {
     apiKey: {
       baseSepolia: process.env.BASESCAN_API_KEY,
+      baseMainnet: process.env.BASESCAN_API_KEY,
     },
     customChains: [
       {
@@ -29,6 +37,14 @@ module.exports = {
         urls: {
           apiURL: "https://api-sepolia.basescan.org/api",
           browserURL: "https://sepolia.basescan.org"
+        }
+      },
+      {
+        network: "baseMainnet",
+        chainId: 8453,
+        urls: {
+          apiURL: "https://api.basescan.org/api",
+          browserURL: "https://basescan.org"
         }
       }
     ]
