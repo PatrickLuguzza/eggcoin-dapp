@@ -19,3 +19,13 @@ eggcoin-dapp/backend/*.log
 .DS_Store
 *.pem
 *.log
+thumbs.db
+.idea/
+.vscode/
+
+# Build directories
+dist/
+coverage/
+
+# Local development
+.env.local
